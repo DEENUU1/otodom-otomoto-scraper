@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional, Type, List
 
 import requests
 from bs4 import BeautifulSoup
@@ -14,7 +14,9 @@ class OtoDomScraper(ScrapeStrategy):
     def _get_url(params: Type[OtoDomParams] = None) -> str:
         raise NotImplementedError
 
-    def scrape(self, params: Optional[OtoDomParams] = None, url: Optional[str] = None):
+    def scrape(self, params: Optional[OtoDomParams] = None, url: Optional[str] = None) -> List[Optional[str]]:
+        result = []
+
         current_page: int = 1
 
         if not url:
@@ -24,6 +26,8 @@ class OtoDomScraper(ScrapeStrategy):
 
         while True:
             page_content = self.get_page_content(url)
+            result.append(page_content)
+
             next_page = self.is_next_page(page_content)
 
             if not next_page:
@@ -32,6 +36,8 @@ class OtoDomScraper(ScrapeStrategy):
             current_page += 1
             url += f"?page={current_page}"
             print(f"Next page: {url}")
+
+        return result
 
     @staticmethod
     def get_page_content(url):
