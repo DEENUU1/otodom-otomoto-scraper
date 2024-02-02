@@ -1,4 +1,4 @@
-from app.strategy.params import ParamsBase
+from strategy.params import ParamsBase
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Literal
