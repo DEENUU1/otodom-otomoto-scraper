@@ -29,7 +29,7 @@ class DaysSinceCreated(Enum):
 
 
 @dataclass
-class OtoDomQuery(ParamsBase):
+class OtoDomParams(ParamsBase):
     price_from: Optional[int] = None
     price_to: Optional[int] = None
     surface_from: Optional[int] = None
