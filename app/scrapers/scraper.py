@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from .params import ParamsBase
 from typing import Optional
 
 
@@ -10,7 +9,7 @@ class ScrapeStrategy(ABC):
         pass
 
 
-class Scraper:
+class PageScraper:
     def __init__(self, scraper_strategy: ScrapeStrategy):
         self.scraper_strategy = scraper_strategy
 

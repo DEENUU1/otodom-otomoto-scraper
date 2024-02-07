@@ -1,22 +1,19 @@
-from typing import Optional, Type, List
+from typing import Optional, List, Any
 
 import requests
 from bs4 import BeautifulSoup
 
-from strategy.scraper import ScrapeStrategy
-from .params import OtoDomParams
+from .scraper import ScrapeStrategy
 
 
-class OtoDomScraper(ScrapeStrategy):
-    BASE_URL: str = "https://www.otodom.pl/"
-
+class OtoBaseScraper(ScrapeStrategy):
     def scrape(self, url: Optional[str] = None) -> List[Optional[str]]:
         result = []
 
         current_page: int = 1
-
+        temp_url = url
         while True:
-            page_content = self.get_page_content(url)
+            page_content = self.get_page_content(temp_url)
             result.append(page_content)
 
             next_page = self.is_next_page(page_content)
@@ -25,8 +22,8 @@ class OtoDomScraper(ScrapeStrategy):
                 break
 
             current_page += 1
-            url += f"?page={current_page}"
-            print(f"Next page: {url}")
+            page_url = self.update_url(url, current_page)
+            print(f"Next page: {page_url}")
 
         return result
 
@@ -41,14 +38,16 @@ class OtoDomScraper(ScrapeStrategy):
             print(e)
             raise e
 
-    @staticmethod
-    def is_next_page(page_content: Optional[str]) -> bool:
+    def update_url(self, url: str, current_page: int) -> str:
+        return NotImplementedError
+
+    def is_next_page(self, page_content: Optional[str]) -> bool:
         if not page_content:
             return False
 
         soup = BeautifulSoup(page_content, "html.parser")
         try:
-            next_page_button = soup.find("button", {"data-cy": "pagination.next-page"})
+            next_page_button = self.get_next_button(soup)
             if next_page_button:
                 return True
 
@@ -57,3 +56,6 @@ class OtoDomScraper(ScrapeStrategy):
             raise e
 
         return False
+
+    def get_next_button(self, soup: Any) -> Any:
+        raise NotImplementedError
