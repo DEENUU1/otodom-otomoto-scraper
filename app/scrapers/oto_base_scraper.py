@@ -10,20 +10,19 @@ class OtoBaseScraper(ScrapeStrategy):
     def scrape(self, url: Optional[str] = None) -> List[Optional[str]]:
         result = []
 
-        current_page: int = 1
+        # current_page: int = 1
         temp_url = url
-        while True:
-            page_content = self.get_page_content(temp_url)
-            result.append(page_content)
+        # while True:
+        page_content = self.get_page_content(temp_url)
+        result.append(page_content)
+            # next_page = self.is_next_page(page_content)
 
-            next_page = self.is_next_page(page_content)
+            # if not next_page:
+            #     break
 
-            if not next_page:
-                break
-
-            current_page += 1
-            page_url = self.update_url(url, current_page)
-            print(f"Next page: {page_url}")
+            # current_page += 1
+            # page_url = self.update_url(url, current_page)
+            # print(f"Next page: {page_url}")
 
         return result
 
@@ -37,9 +36,6 @@ class OtoBaseScraper(ScrapeStrategy):
         except Exception as e:
             print(e)
             raise e
-
-    def update_url(self, url: str, current_page: int) -> str:
-        return NotImplementedError
 
     def is_next_page(self, page_content: Optional[str]) -> bool:
         if not page_content:
@@ -59,3 +55,6 @@ class OtoBaseScraper(ScrapeStrategy):
 
     def get_next_button(self, soup: Any) -> Any:
         raise NotImplementedError
+
+    def update_url(self, url: str, current_page: int) -> str:
+        pass

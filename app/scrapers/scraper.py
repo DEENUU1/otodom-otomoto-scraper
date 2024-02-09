@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, List
 
 
 class ScrapeStrategy(ABC):
@@ -14,4 +14,4 @@ class PageScraper:
         self.scraper_strategy = scraper_strategy
 
     def scrape(self, url: Optional[str] = None):
-        self.scraper_strategy.scrape(url)
+        return self.scraper_strategy.scrape(url)
