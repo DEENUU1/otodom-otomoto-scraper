@@ -1,6 +1,6 @@
 from typing import Any
 
-from .oto_base_scraper import OtoBaseScraper
+from .oto_base import OtoBaseScraper
 
 
 class OtoDomScraper(OtoBaseScraper):

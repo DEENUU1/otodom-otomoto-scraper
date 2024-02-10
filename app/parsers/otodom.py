@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from .parser import ResultBase
-from .oto_base_parser import OtoBaseParser
+from .otobase import OtoBaseParser
 
 
 @dataclass

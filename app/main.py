@@ -1,36 +1,53 @@
-from parsers.otodom_parser import OtoDomParser
-from parsers.otomoto_parser import OtoMotoParser
-from scrapers.otodom_scraper import OtoDomScraper
-from scrapers.otomoto_scraper import OtoMotoScraper
-from scrapers.scraper import PageScraper
-from parsers.parser import Parser
+from typing import Optional
+
+import typer
+
 from exporters.export import Export
 from exporters.to_json import JsonExport
+from parsers.otodom import OtoDomParser
+from parsers.otomoto import OtoMotoParser
+from parsers.parser import Parser
+from scrapers.otodom import OtoDomScraper
+from scrapers.otomoto import OtoMotoScraper
+from scrapers.scraper import PageScraper
+
+app = typer.Typer()
 
 
-# otomoto_url = "https://www.otomoto.pl/osobowe"
-# otomoto_scraper = OtoMotoScraper()
-#
-# page_scraper_otomoto = PageScraper(otomoto_scraper)
-# otomoto_data = page_scraper_otomoto.scrape(url=otomoto_url)
-# otomoto_parser = OtoMotoParser()
-# otomoto_page_parser = Parser(otomoto_parser)
-# otomoto_parsed_data = otomoto_page_parser.parse(data=otomoto_data)
-# for parsed_data in otomoto_parsed_data:
-#     print(parsed_data)
-#     print("\n\n\n")
+@app.command()
+def main(
+        url: str,
+        page_limit: Optional[int] = 1,
+        export_to: Optional[str] = "json",
+) -> None:
+    parsed_data = None
 
-otodom_url = "https://www.otodom.pl/pl/wyniki/sprzedaz/mieszkanie/cala-polska"
-otodom_scraper = OtoDomScraper()
+    if "otomoto" in url:
+        page_scraper_otomoto = PageScraper(scraper_strategy=OtoMotoScraper())
+        otomoto_data = page_scraper_otomoto.scrape(url=url, page_limit=page_limit)
 
-page_scraper_otodom = PageScraper(otodom_scraper)
+        otomoto_page_parser = Parser(parser_strategy=OtoMotoParser())
+        parsed_data = otomoto_page_parser.parse(data=otomoto_data)
+    elif "otodom" in url:
+        page_scraper_otodom = PageScraper(scraper_strategy=OtoDomScraper())
+        otodom_data = page_scraper_otodom.scrape(url=url, page_limit=page_limit)
 
-otodom_data = page_scraper_otodom.scrape(url=otodom_url, page_limit=2)
+        otodom_page_parser = Parser(parser_strategy=OtoDomParser())
+        parsed_data = otodom_page_parser.parse(data=otodom_data)
+    else:
+        print("Invalid url")
 
-otodom_parser = OtoDomParser()
-otodom_page_parser = Parser(otodom_parser)
-otodom_parsed_data = otodom_page_parser.parse(data=otodom_data)
+    if export_to == "json":
+        if not parsed_data:
+            print("No data")
 
-json_export = JsonExport()
-export = Export(strategy=json_export)
-export.export(parsed_data=otodom_parsed_data)
+        json_export = JsonExport()
+        export = Export(strategy=json_export)
+        export.export(parsed_data=parsed_data)
+
+    else:
+        print("Invalid export format")
+
+
+if __name__ == "__main__":
+    app()
