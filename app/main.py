@@ -4,6 +4,9 @@ from scrapers.otodom_scraper import OtoDomScraper
 from scrapers.otomoto_scraper import OtoMotoScraper
 from scrapers.scraper import PageScraper
 from parsers.parser import Parser
+from exporters.export import Export
+from exporters.to_json import JsonExport
+
 
 # otomoto_url = "https://www.otomoto.pl/osobowe"
 # otomoto_scraper = OtoMotoScraper()
@@ -22,11 +25,12 @@ otodom_scraper = OtoDomScraper()
 
 page_scraper_otodom = PageScraper(otodom_scraper)
 
-otodom_data = page_scraper_otodom.scrape(url=otodom_url)
+otodom_data = page_scraper_otodom.scrape(url=otodom_url, page_limit=2)
 
 otodom_parser = OtoDomParser()
 otodom_page_parser = Parser(otodom_parser)
 otodom_parsed_data = otodom_page_parser.parse(data=otodom_data)
-for parsed_data in otodom_parsed_data:
-    print(parsed_data)
-    print("\n\n\n")
+
+json_export = JsonExport()
+export = Export(strategy=json_export)
+export.export(parsed_data=otodom_parsed_data)

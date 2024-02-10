@@ -7,22 +7,22 @@ from .scraper import ScrapeStrategy
 
 
 class OtoBaseScraper(ScrapeStrategy):
-    def scrape(self, url: Optional[str] = None) -> List[Optional[str]]:
+    def scrape(self, url: Optional[str] = None, page_limit: Optional[int] = None) -> List[Optional[str]]:
         result = []
-
-        # current_page: int = 1
+        current_page: int = 1
         temp_url = url
-        # while True:
-        page_content = self.get_page_content(temp_url)
-        result.append(page_content)
-            # next_page = self.is_next_page(page_content)
 
-            # if not next_page:
-            #     break
+        while True:
+            page_content = self.get_page_content(temp_url)
+            result.append(page_content)
+            next_page = self.is_next_page(page_content)
 
-            # current_page += 1
-            # page_url = self.update_url(url, current_page)
-            # print(f"Next page: {page_url}")
+            if not next_page or (page_limit is not None and current_page >= page_limit):
+                break
+
+            current_page += 1
+            page_url = self.update_url(url, current_page)
+            print(f"Next page: {page_url}")
 
         return result
 
