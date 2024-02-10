@@ -95,7 +95,7 @@ class OtoDomParser(ParserStrategy):
                 )
 
         except Exception as e:
-            print(e)
+            raise e
 
     def get_offers(self, soup):
         try:
