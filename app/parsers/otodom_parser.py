@@ -1,9 +1,8 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
-from bs4 import BeautifulSoup
-
-from .parser import ParserStrategy, ResultBase
+from .parser import ResultBase
+from .oto_base_parser import OtoBaseParser
 
 
 @dataclass
@@ -24,25 +23,7 @@ class OtoDomResult(ResultBase):
     details: Optional[OtoDomOfferDetails] = None
 
 
-class OtoDomParser(ParserStrategy):
-
-    def get_soup(self, data: str):
-        return BeautifulSoup(data, 'html.parser')
-
-    def parse(self, data: List[Optional[str]]) -> List[Optional[OtoDomResult]]:
-        result = []
-
-        for page in data:
-            soup = self.get_soup(page)
-
-            offers = self.get_offers(soup)
-            for offer in offers:
-                if offer:
-                    parsed_offer = self.get_offer(offer)
-                    if parsed_offer:
-                        result.append(parsed_offer)
-
-        return result
+class OtoDomParser(OtoBaseParser):
 
     def get_offer(self, offer) -> Optional[OtoDomResult]:
         try:
