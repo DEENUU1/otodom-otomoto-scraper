@@ -23,14 +23,14 @@ class OtoMotoParser(OtoBaseParser):
 
     def get_offer(self, offer) -> Optional[OtoMotoResult]:
         try:
-            title_url_container = offer.find("h1", class_="e1oqyyyi9")
+            title_url_container = offer.find("h1", class_="efpuxbr9 ooa-1ed90th er34gjf0")
 
             title = title_url_container.find("a")
             url = title["href"]
             image = offer.find("img")
             type_of_seller = offer.find("li", class_="ooa-1y6ajhy ebwza7n5")
-            price = offer.find("h3", class_="e1oqyyyi16")
-            price_currency = offer.find("p", class_="e1oqyyyi17")
+            price = offer.find("h3", class_="efpuxbr16 ooa-1n2paoq er34gjf0")
+            price_currency = offer.find("p", class_="efpuxbr17 ooa-8vn6i7 er34gjf0")
 
             mileage = offer.find("dd", {"data-parameter": "mileage"})
             fuel_type = offer.find("dd", {"data-parameter": "fuel_type"})
@@ -57,7 +57,7 @@ class OtoMotoParser(OtoBaseParser):
 
     def get_offers(self, soup):
         try:
-            items = soup.find_all("article", class_="ooa-yca59n e1oqyyyi0")
+            items = soup.find_all("article", class_="ooa-yca59n efpuxbr0")
             print(f"Find {len(items)} items")
             return items
         except Exception as e:
